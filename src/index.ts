@@ -1,9 +1,11 @@
+import "reflect-metadata";
 import http from "http"
 import express from "express";
 import { Server } from "socket.io"
 import cors from "cors";
+import { createConnection } from "typeorm";
 
-
+// express & SocketIo init
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "http://localhost:3000" } });
@@ -25,6 +27,25 @@ app.use(cors(corsOptions));
 app.get('/', (req, res) => {
 	res.send("Hello world");
 })
+
+
+// typeorm initialization
+createConnection({
+	type: "postgres",
+	host: "localhost",
+	port: 5432,
+	username: "chat",
+	password: "chat1234",
+	database: "chat",
+	entities: [
+	],
+	synchronize: true,
+	logging: false
+}).then(connection => {
+	console.log("connected to database successfully")
+}).catch(error => console.log(error));
+
+
 
 io.on("connection", (socket) => {
 	console.info("a user connected");
