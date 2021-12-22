@@ -1,9 +1,10 @@
 import "reflect-metadata";
 import http from "http"
 import express from "express";
-import { Server } from "socket.io"
+import { Server, Socket } from "socket.io"
 import cors from "cors";
 import { createConnection } from "typeorm";
+import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
 // express & SocketIo init
 const app = express();
@@ -46,16 +47,33 @@ createConnection({
 }).catch(error => console.log(error));
 
 
+io.use((socket: any, next) => {
+	const username = socket.handshake.auth.username;
+	if (!username) {
+		return next(new Error("Invalid username"))
+	}
+	socket.username = username;
+	next()
+})
 
-io.on("connection", (socket) => {
-	console.info("a user connected");
+
+io.on("connection", (socket: any) => {
+	let { username } = socket
+	console.info(`${username} connected`);
+	const users = [];
+	for (let [id, socket] of io.of("/").sockets) {
+		users.push({
+			userID: id,
+			username: socket.username,
+		});
+	}
+	socket.emit("users", users);
+
 	socket.on('disconnect', () => {
-		console.error('user disconnected');
+		console.error(`${username} disconnected`);
 	});
 
-	socket.on('chat message', (msg) => {
-		console.log('message: ' + msg);
-	});
+
 })
 
 server.listen(5000, () => {
