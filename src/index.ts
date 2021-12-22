@@ -58,8 +58,7 @@ io.use((socket: any, next) => {
 
 
 io.on("connection", (socket: any) => {
-	let { username } = socket
-	console.info(`${username} connected`);
+	console.info(`${socket.username} connected`);
 	const users = [];
 	for (let [id, socket] of io.of("/").sockets) {
 		users.push({
@@ -70,7 +69,7 @@ io.on("connection", (socket: any) => {
 	socket.emit("users", users);
 
 	socket.on('disconnect', () => {
-		console.error(`${username} disconnected`);
+		console.error(`${socket.username} disconnected`);
 	});
 
 
