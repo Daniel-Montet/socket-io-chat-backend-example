@@ -31,23 +31,28 @@ app.get('/', (req, res) => {
 
 
 // typeorm initialization
-createConnection({
-	type: "postgres",
-	host: "localhost",
-	port: 5432,
-	username: "chat",
-	password: "chat1234",
-	database: "chat",
-	entities: [
-	],
-	synchronize: true,
-	logging: false
-}).then(connection => {
-	console.log("connected to database successfully")
-}).catch(error => console.log(error));
+// createConnection({
+// 	type: "postgres",
+// 	host: "localhost",
+// 	port: 5432,
+// 	username: "chat",
+// 	password: "chat1234",
+// 	database: "chat",
+// 	entities: [
+// 	],
+// 	synchronize: true,
+// 	logging: false
+// }).then(connection => {
+// 	console.log("connected to database successfully")
+// }).catch(error => console.log(error));
 
 
-io.use((socket: any, next) => {
+interface socket extends Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any> {
+	username?: string
+}
+
+
+io.use((socket: socket, next) => {
 	const username = socket.handshake.auth.username;
 	if (!username) {
 		return next(new Error("Invalid username"))
@@ -57,19 +62,31 @@ io.use((socket: any, next) => {
 })
 
 
-io.on("connection", (socket: any) => {
-	console.info(`${socket.username} connected`);
+io.on("connection", (socket: socket) => {
+	console.log(`${socket.username} connected`);
+
 	const users = [];
 	for (let [id, socket] of io.of("/").sockets) {
+		let socketType: socket;
+		socketType = socket;
 		users.push({
 			userID: id,
-			username: socket.username,
+			username: socketType.username
 		});
 	}
 	socket.emit("users", users);
 
+	socket.broadcast.emit("user connected", {
+		userID: socket.id,
+		username: socket.username,
+	});
+
 	socket.on('disconnect', () => {
 		console.error(`${socket.username} disconnected`);
+		socket.broadcast.emit("user disconnected", {
+			userID: socket.id,
+			username: socket.username
+		})
 	});
 
 
