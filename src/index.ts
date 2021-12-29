@@ -3,7 +3,7 @@ import http from "http"
 import express from "express";
 import { Server, Socket } from "socket.io"
 import cors from "cors";
-import { createConnection } from "typeorm";
+// import { createConnection } from "typeorm";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
 // express & SocketIo init
@@ -67,8 +67,7 @@ io.on("connection", (socket: socket) => {
 
 	const users = [];
 	for (let [id, socket] of io.of("/").sockets) {
-		let socketType: socket;
-		socketType = socket;
+		let socketType: socket = socket;
 		users.push({
 			userID: id,
 			username: socketType.username
@@ -89,9 +88,17 @@ io.on("connection", (socket: socket) => {
 		})
 	});
 
+	socket.on('private message', ({ message, to }) => {
+		console.log(message)
+		socket.to(to).emit("private message", {
+			message,
+			from: socket.id
+		})
+	})
+
 
 })
 
-server.listen(5000, () => {
-	console.log('listening on port 3000')
+server.listen(8000, () => {
+	console.log('listening on port 8000')
 })
