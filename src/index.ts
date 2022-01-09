@@ -144,7 +144,7 @@ io.on("connection", async (socket: socket) => {
 			to,
 		};
 
-		socket.to(to).to(socket.userID!).emit("private message", message)
+		io.to([to, socket.userID!]).emit("private message", message)
 		messageStore.saveMessage(message!);
 	})
 
