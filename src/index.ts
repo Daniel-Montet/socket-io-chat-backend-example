@@ -7,6 +7,8 @@ import crypto from "crypto";
 import { InMemorySessionStore, session } from "./lib/sessionStore";
 import { InMemoryMessageStore } from "./lib/messageStore";
 
+const PORT = process.env.PORT || 3000;
+
 // express & SocketIo init
 const app = express();
 const server = http.createServer(app);
@@ -19,7 +21,7 @@ const messageStore = new InMemoryMessageStore();
 
 app.get("/", (req, res) => {
 	console.log("hello")
-	res.send("hi")
+	res.send("hello hello helo we so hiigh")
 })
 
 io.use((socket: socket, next) => {
@@ -167,6 +169,6 @@ io.on("connection", async (socket: socket) => {
 
 })
 
-server.listen(8000, () => {
-	console.log('listening on port 8000')
+server.listen(PORT, () => {
+	console.log(`listening on port ${PORT}`)
 })
