@@ -2,11 +2,11 @@ services:
   socket-server:
     build: . 
     ports:
-      - "8000:3000"
+      - "8000:8000"
     volumes:
-      - ./:/app
+      - ./:/app:ro
       - /app/node_modules
     environment:
-      - PORT=3000
+      - PORT=8000
     # env_file:
     #   - .env

@@ -4,3 +4,4 @@ Dockerfile
 .git
 .vscode
 *.env
+docker-compose*

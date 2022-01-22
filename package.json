@@ -1,16 +1,17 @@
 {
   "name": "chat-backend-example",
   "version": "1.0.0",
-  "description": "",
+  "description": "A socket io chat app implementation example",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "NODE_ENV=development nodemon --exec ts-node src/index.ts",
-    "devW": "nodemon --exec ts-node src/index.ts"
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node dist/index.js",
+    "dev": "nodemon --exec ts-node src/index.ts"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Daniel Montet",
+  "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.2",

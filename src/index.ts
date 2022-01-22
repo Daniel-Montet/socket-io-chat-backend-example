@@ -7,7 +7,8 @@ import crypto from "crypto";
 import { InMemorySessionStore, session } from "./lib/sessionStore";
 import { InMemoryMessageStore } from "./lib/messageStore";
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
+const NODE_ENV = process.env.NODE_ENV;
 
 // express & SocketIo init
 const app = express();
@@ -19,9 +20,12 @@ const sessionStore = new InMemorySessionStore();
 const messageStore = new InMemoryMessageStore();
 
 
-app.get("/", (req, res) => {
-	console.log("hello")
-	res.send("hello hello helo we so hiigh")
+app.get("/", (_, res) => {
+	if (NODE_ENV === "development") {
+		res.send(`running in ${NODE_ENV} environment yeai`);
+	}
+
+	res.send(`running in ${NODE_ENV} environment`);
 })
 
 io.use((socket: socket, next) => {
