@@ -13,7 +13,7 @@ const NODE_ENV = process.env.NODE_ENV;
 // express & SocketIo init
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "http://localhost:3000" } });
+const io = new Server(server, { cors: { origin: ["http://localhost:3000", "https://chat-frontend-nine.vercel.app"] } });
 
 const randomId = () => crypto.randomBytes(8).toString("hex");
 const sessionStore = new InMemorySessionStore();
@@ -22,7 +22,7 @@ const messageStore = new InMemoryMessageStore();
 
 app.get("/", (_, res) => {
 	if (NODE_ENV === "development") {
-		res.send(`running in ${NODE_ENV} environment yeai`);
+		res.send(`running in ${NODE_ENV} environment`);
 	}
 
 	res.send(`running in ${NODE_ENV} environment`);
