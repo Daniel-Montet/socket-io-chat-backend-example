@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:18
 WORKDIR /app
 COPY package.json .
 
@@ -12,10 +12,3 @@ RUN npm install
 COPY . ./
 ENV PORT 8000
 EXPOSE $PORT
-
-
-# RUN npm install
-# RUN if [ "${NODE_ENV}" = "production" ]; \
-# 	then npm prune \
-# 	fi
-# CMD ["npm","run","dev"]
